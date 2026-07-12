@@ -1,1 +1,2 @@
-
+#in terminal install hugging face , then in terminal do this python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='godofwar1007/moelora', local_dir='./moelora', allow_patterns=['10k_3ep_vllm/*'])"
+#change folder name to what u pushed(as of now 10k_1ep_vllm is based on checkpoint maloraa_10k_1ep 
