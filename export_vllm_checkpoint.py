@@ -91,12 +91,20 @@ def export_vllm_checkpoint(
             state_dict[f"{prefix}.self_attn.k_proj.weight"] = attn_weights["k_proj.weight"]
             state_dict[f"{prefix}.self_attn.v_proj.weight"] = attn_weights["v_proj.weight"]
             state_dict[f"{prefix}.self_attn.o_proj.weight"] = attn_weights["o_proj.weight"]
+            base_attn = layer.self_attn.base_attn
+            state_dict[f"{prefix}.self_attn.q_proj.bias"] = base_attn.q_proj.base.bias.detach().cpu()
+            state_dict[f"{prefix}.self_attn.k_proj.bias"] = base_attn.k_proj.base.bias.detach().cpu()
+            state_dict[f"{prefix}.self_attn.v_proj.bias"] = base_attn.v_proj.base.bias.detach().cpu()
+
         else:
             base_attn = layer.self_attn.base_attn if layer._has_attn_lora else layer.self_attn
             state_dict[f"{prefix}.self_attn.q_proj.weight"] = base_attn.q_proj.weight.detach().cpu()
             state_dict[f"{prefix}.self_attn.k_proj.weight"] = base_attn.k_proj.weight.detach().cpu()
             state_dict[f"{prefix}.self_attn.v_proj.weight"] = base_attn.v_proj.weight.detach().cpu()
             state_dict[f"{prefix}.self_attn.o_proj.weight"] = base_attn.o_proj.weight.detach().cpu()
+            state_dict[f"{prefix}.self_attn.q_proj.bias"] = base_attn.q_proj.bias.detach().cpu()
+            state_dict[f"{prefix}.self_attn.k_proj.bias"] = base_attn.k_proj.bias.detach().cpu()
+            state_dict[f"{prefix}.self_attn.v_proj.bias"] = base_attn.v_proj.bias.detach().cpu()
 
         # router — trained, but NEVER merged (it's not a LoRA delta, it's
         # used as-is). Pull straight from the original in-memory model.
